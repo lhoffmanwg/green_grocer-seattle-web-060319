@@ -1,33 +1,37 @@
 require 'pry'
 
-def consolidate_cart(cart:[])
-  # code here
-  my_hash = {}
+def consolidate_cart(cart_ary)
+ 
+  new_hash = {}
 
-  cart.each do |item|
-    item.each do |itemname, data|
-      if my_hash[itemname] == nil
-        my_hash[itemname] = data
-        my_hash[itemname][:count] = 1 
+  cart_ary.each do |item|
+    item.each do |item_name, data|
+      
+      if new_hash[item_name] == nil
+        new_hash[item_name] = data
+        new_hash[item_name][:count] = 1 
+        #binding.pry
       else
-        my_hash[itemname][:count] += 1
+        new_hash[item_name][:count] += 1
       end
     end
   end
-  my_hash
+ 
+  new_hash
+  
 end
 
-def apply_coupons(cart:[], coupons:[])
-  # code here
-  my_hash = {}
-  if coupons == nil || coupons.empty?
-    my_hash = cart
+def apply_coupons(cart_ary, coupons_ary)
+ binding.pry
+  new_hash = {}
+  if coupons_ary == nil || coupons_ary.empty?
+    new_hash = cart_ary
   end
-  coupons.each do |coupon|
-    cart.each do |itemname, data|
+  coupons_ary.each do |coupon|
+    cart_ary.each do |itemname, data|
       if itemname == coupon[:item]
         count = data[:count] - coupon[:num]
-
+        
         if count >= 0
           if my_hash["#{itemname} W/COUPON"] == nil
             my_hash["#{itemname} W/COUPON"] = {price: coupon[:cost], clearance: data[:clearance], count: 1}
@@ -38,18 +42,18 @@ def apply_coupons(cart:[], coupons:[])
         else
           count = data[:count]
         end
-        my_hash[itemname] = data
-        my_hash[itemname][:count] = count
+        new_hash[itemname] = data
+        new_hash[itemname][:count] = count
       else
-        my_hash[itemname] = data
+        new_hash[itemname] = data
       end
     end
   end
-  my_hash
+  new_hash
 end
 
 def apply_clearance(cart:[])
-  # code here
+
   cart.each do |itemname, data|
     if data[:clearance]
       discount = data[:price] * 0.8
@@ -59,9 +63,9 @@ def apply_clearance(cart:[])
   cart
 end
 
-def checkout(cart: [], coupons: [])
-  # code here
-end 
+def checkout(cart_ary, coupons_ary)
+ 
+ 
   cart = consolidate_cart(cart:cart)
   cart = apply_coupons(cart:cart, coupons:coupons)
   cart = apply_clearance(cart:cart)
@@ -72,7 +76,7 @@ end
   if total > 100
     puts total
     total = total - (total * 0.1 )
-    #total.round(2)
+    
   end
   total
 end
